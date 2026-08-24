@@ -1,0 +1,68 @@
+const { z } = require('zod');
+
+// --- Auth Schemas ---
+
+const registerSchema = z.object({
+  username: z.string()
+    .min(3, 'Username must be at least 3 characters')
+    .max(30, 'Username cannot exceed 30 characters')
+    .trim(),
+  email: z.string()
+    .email('Please provide a valid email')
+    .trim()
+    .toLowerCase(),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(128, 'Password cannot exceed 128 characters'),
+});
+
+const loginSchema = z.object({
+  email: z.string()
+    .email('Please provide a valid email')
+    .trim()
+    .toLowerCase(),
+  password: z.string()
+    .min(1, 'Password is required'),
+});
+
+// --- Query Schemas ---
+
+const paginationSchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+});
+
+// --- Validation Middleware Factory ---
+
+/**
+ * Creates Express middleware that validates req[source] against a Zod schema.
+ * On success, replaces req[source] with the parsed (cleaned) data.
+ * On failure, returns 400 with structured error messages.
+ */
+const validate = (schema, source = 'body') => {
+  return (req, res, next) => {
+    const result = schema.safeParse(req[source]);
+
+    if (!result.success) {
+      const errors = result.error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      }));
+
+      return res.status(400).json({
+        error: 'Validation failed',
+        details: errors,
+      });
+    }
+
+    req[source] = result.data;
+    next();
+  };
+};
+
+module.exports = {
+  registerSchema,
+  loginSchema,
+  paginationSchema,
+  validate,
+};
