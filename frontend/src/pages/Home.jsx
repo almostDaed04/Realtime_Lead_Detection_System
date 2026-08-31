@@ -1,8 +1,32 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
+  const [debugInfo, setDebugInfo] = useState([]);
+
+  useEffect(() => {
+    const getStyles = (el, name) => {
+      if (!el) return `${name}: null`;
+      const s = window.getComputedStyle(el);
+      return `${name} => pos: ${s.position}, h: ${s.height}, display: ${s.display}, overflow: ${s.overflow}, overflow-y: ${s.overflowY}`;
+    };
+    
+    const gridEl = document.querySelector('section:nth-of-type(2) .grid');
+    const cardEl = gridEl?.firstElementChild;
+
+    const info = [
+      getStyles(document.documentElement, "html"),
+      getStyles(document.body, "body"),
+      getStyles(document.getElementById('root'), "#root"),
+      getStyles(document.getElementById('root')?.firstElementChild, "wrapper"),
+      gridEl ? `grid => pos: ${window.getComputedStyle(gridEl).position}, h: ${window.getComputedStyle(gridEl).height}, display: ${window.getComputedStyle(gridEl).display}` : "grid: null",
+      cardEl ? `card => pos: ${window.getComputedStyle(cardEl).position}, h: ${window.getComputedStyle(cardEl).height}, display: ${window.getComputedStyle(cardEl).display}` : "card: null"
+    ];
+    
+    setDebugInfo(info);
+  }, []);
 
   const features = [
     {
@@ -36,7 +60,15 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      {/* Visual Debug Overlay */}
+      <div className="fixed bottom-4 right-4 z-50 bg-slate-900/90 text-slate-300 text-xs p-4 rounded-xl border border-slate-700 max-w-sm pointer-events-none font-mono">
+        <h4 className="font-bold text-red-400 mb-2">DEBUG LAYOUT</h4>
+        {debugInfo.map((info, idx) => (
+          <div key={idx} className="mb-1">{info}</div>
+        ))}
+      </div>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background gradient orbs */}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import HistoryCard from '../components/HistoryCard';
 import PaginationControl from '../components/PaginationControl';
@@ -59,7 +60,7 @@ const History = () => {
           <span className="text-5xl">🍂</span>
           <h2 className="text-xl font-bold text-slate-200 mt-4">No Predictions Yet</h2>
           <p className="text-slate-400 mt-2 mb-6">Upload your first leaf image to get started.</p>
-          <a href="/upload" className="btn btn-primary">📸 Upload Image</a>
+          <Link to="/upload" className="btn btn-primary">📸 Upload Image</Link>
         </div>
       ) : (
         <>

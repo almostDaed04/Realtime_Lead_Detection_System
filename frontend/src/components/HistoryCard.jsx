@@ -9,6 +9,7 @@ const HistoryCard = ({ prediction }) => {
   const [thumbnailError, setThumbnailError] = useState(false);
 
   useEffect(() => {
+    let activeUrl = null;
     // Load thumbnail from the dedicated endpoint
     const loadThumbnail = async () => {
       try {
@@ -18,7 +19,9 @@ const HistoryCard = ({ prediction }) => {
         });
         if (response.ok) {
           const blob = await response.blob();
-          setThumbnailUrl(URL.createObjectURL(blob));
+          const url = URL.createObjectURL(blob);
+          activeUrl = url;
+          setThumbnailUrl(url);
         } else {
           setThumbnailError(true);
         }
@@ -30,7 +33,7 @@ const HistoryCard = ({ prediction }) => {
     loadThumbnail();
 
     return () => {
-      if (thumbnailUrl) URL.revokeObjectURL(thumbnailUrl);
+      if (activeUrl) URL.revokeObjectURL(activeUrl);
     };
   }, [prediction._id]);
 

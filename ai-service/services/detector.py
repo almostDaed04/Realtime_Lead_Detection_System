@@ -55,8 +55,14 @@ class LeafDetector:
                 - leaf_count (int): Number of detected leaves
                 - boxes (list): List of [x1, y1, x2, y2] bounding boxes
         """
+        from PIL import Image
+        import io
+
+        # Load image from bytes
+        image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+
         # Run inference
-        results = self.model(image_bytes, conf=DETECTION_CONF, verbose=False)
+        results = self.model(image, conf=DETECTION_CONF, verbose=False)
 
         boxes = []
         if results and len(results) > 0:
