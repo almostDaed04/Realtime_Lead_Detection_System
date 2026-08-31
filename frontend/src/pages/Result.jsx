@@ -21,11 +21,11 @@ const Result = () => {
   }
 
   const speciesInfo = {
-    'Neem': { emoji: '🌿', color: 'from-emerald-500 to-emerald-700', description: 'Known for its medicinal properties, used in traditional Ayurvedic medicine.' },
-    'Amla': { emoji: '🫒', color: 'from-lime-500 to-lime-700', description: 'Indian gooseberry, rich in Vitamin C and antioxidants.' },
-    'Aloe Vera': { emoji: '🌱', color: 'from-green-500 to-green-700', description: 'Succulent plant used for skin care and digestive health.' },
-    'Mango': { emoji: '🥭', color: 'from-amber-500 to-amber-700', description: 'King of fruits, its leaves are used in various traditional practices.' },
-    'Curry Leaves': { emoji: '🍃', color: 'from-teal-500 to-teal-700', description: 'Aromatic leaves essential in South Indian cuisine with medicinal value.' },
+    'Mango': { emoji: '🥭', color: 'from-amber-500 to-amber-700', description: 'King of fruits — its elongated, glossy leaves are used in traditional rituals and have medicinal properties.' },
+    'Guava': { emoji: '🍈', color: 'from-emerald-500 to-emerald-700', description: 'Tropical fruit tree with ovate leaves featuring prominent parallel veins, rich in nutrients.' },
+    'Jamun': { emoji: '🫐', color: 'from-purple-500 to-purple-700', description: 'Java Plum — its glossy, leathery leaves closely resemble Mango. The fruit is known for managing blood sugar.' },
+    'Ashoka': { emoji: '🌳', color: 'from-green-500 to-green-700', description: 'Sacred tree of India with elegant elongated leaves, used extensively in Ayurvedic medicine.' },
+    'Pomegranate': { emoji: '🍎', color: 'from-rose-500 to-rose-700', description: 'Ancient fruit tree with small, glossy, elongated leaves. Known for its antioxidant-rich fruit.' },
   };
 
   const info = speciesInfo[prediction.species] || { emoji: '🌿', color: 'from-emerald-500 to-emerald-700', description: '' };

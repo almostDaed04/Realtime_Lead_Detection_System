@@ -11,11 +11,11 @@ Four independent services:
 - **Database** — MongoDB
 
 ## Supported Species
-- Neem
-- Amla
-- Aloe Vera
 - Mango
-- Curry Leaves
+- Guava
+- Jamun (Java Plum)
+- Ashoka
+- Pomegranate
 
 ## Getting Started
 

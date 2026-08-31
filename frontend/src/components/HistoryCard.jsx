@@ -49,11 +49,11 @@ const HistoryCard = ({ prediction }) => {
 
   // Species emoji map
   const speciesEmoji = {
-    'Neem': '🌿',
-    'Amla': '🫒',
-    'Aloe Vera': '🌱',
     'Mango': '🥭',
-    'Curry Leaves': '🍃',
+    'Guava': '🍈',
+    'Jamun': '🫐',
+    'Ashoka': '🌳',
+    'Pomegranate': '🍎',
   };
 
   return (

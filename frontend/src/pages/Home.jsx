@@ -1,32 +1,8 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
-  const [debugInfo, setDebugInfo] = useState([]);
-
-  useEffect(() => {
-    const getStyles = (el, name) => {
-      if (!el) return `${name}: null`;
-      const s = window.getComputedStyle(el);
-      return `${name} => pos: ${s.position}, h: ${s.height}, display: ${s.display}, overflow: ${s.overflow}, overflow-y: ${s.overflowY}`;
-    };
-    
-    const gridEl = document.querySelector('section:nth-of-type(2) .grid');
-    const cardEl = gridEl?.firstElementChild;
-
-    const info = [
-      getStyles(document.documentElement, "html"),
-      getStyles(document.body, "body"),
-      getStyles(document.getElementById('root'), "#root"),
-      getStyles(document.getElementById('root')?.firstElementChild, "wrapper"),
-      gridEl ? `grid => pos: ${window.getComputedStyle(gridEl).position}, h: ${window.getComputedStyle(gridEl).height}, display: ${window.getComputedStyle(gridEl).display}` : "grid: null",
-      cardEl ? `card => pos: ${window.getComputedStyle(cardEl).position}, h: ${window.getComputedStyle(cardEl).height}, display: ${window.getComputedStyle(cardEl).display}` : "card: null"
-    ];
-    
-    setDebugInfo(info);
-  }, []);
 
   const features = [
     {
@@ -52,22 +28,15 @@ const Home = () => {
   ];
 
   const species = [
-    { name: 'Neem', emoji: '🌿', color: 'from-emerald-500/20 to-emerald-600/10' },
-    { name: 'Amla', emoji: '🫒', color: 'from-lime-500/20 to-lime-600/10' },
-    { name: 'Aloe Vera', emoji: '🌱', color: 'from-green-500/20 to-green-600/10' },
     { name: 'Mango', emoji: '🥭', color: 'from-amber-500/20 to-amber-600/10' },
-    { name: 'Curry Leaves', emoji: '🍃', color: 'from-teal-500/20 to-teal-600/10' },
+    { name: 'Guava', emoji: '🍈', color: 'from-emerald-500/20 to-emerald-600/10' },
+    { name: 'Jamun', emoji: '🫐', color: 'from-purple-500/20 to-purple-600/10' },
+    { name: 'Ashoka', emoji: '🌳', color: 'from-green-500/20 to-green-600/10' },
+    { name: 'Pomegranate', emoji: '🍎', color: 'from-rose-500/20 to-rose-600/10' },
   ];
 
   return (
     <div className="min-h-screen relative">
-      {/* Visual Debug Overlay */}
-      <div className="fixed bottom-4 right-4 z-50 bg-slate-900/90 text-slate-300 text-xs p-4 rounded-xl border border-slate-700 max-w-sm pointer-events-none font-mono">
-        <h4 className="font-bold text-red-400 mb-2">DEBUG LAYOUT</h4>
-        {debugInfo.map((info, idx) => (
-          <div key={idx} className="mb-1">{info}</div>
-        ))}
-      </div>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
@@ -91,7 +60,7 @@ const Home = () => {
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto">
               Upload a leaf image and our AI instantly detects and classifies it among
-              5 medicinal plant species. Fast, accurate, and privacy-focused.
+              5 common plant species. Fast, accurate, and privacy-focused.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -146,7 +115,7 @@ const Home = () => {
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-slate-200">Supported Species</h2>
           <p className="text-center text-slate-400 mb-12">
-            Our AI model can identify these 5 medicinal plant species
+            Our AI model can identify these 5 common plant species
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">

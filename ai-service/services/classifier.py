@@ -19,8 +19,8 @@ logger = logging.getLogger(__name__)
 MODELS_DIR = Path(__file__).parent.parent / "models"
 CLASSIFIER_WEIGHTS = os.getenv("CLASSIFIER_WEIGHTS", str(MODELS_DIR / "leaf_classifier.pth"))
 
-# Species labels (fixed as per SRS)
-SPECIES_LABELS = ["Neem", "Amla", "Aloe Vera", "Mango", "Curry Leaves"]
+# Species labels
+SPECIES_LABELS = ["Mango", "Guava", "Jamun", "Ashoka", "Pomegranate"]
 
 # Image preprocessing (must match training preprocessing)
 TRANSFORM = transforms.Compose([
