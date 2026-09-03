@@ -9,6 +9,7 @@ import Upload from './pages/Upload';
 import Result from './pages/Result';
 import History from './pages/History';
 import AdminDashboard from './pages/AdminDashboard';
+import VerifyCode from './pages/VerifyCode';
 import './index.css';
 
 function App() {
@@ -47,7 +48,9 @@ function App() {
                   <History />
                 </ProtectedRoute>
               }
+              
             />
+            <Route path="/verify" element={<VerifyCode />} />
 
             {/* Protected Routes (Admin) */}
             <Route
