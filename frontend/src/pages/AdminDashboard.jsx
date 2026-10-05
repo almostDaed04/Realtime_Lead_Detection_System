@@ -71,74 +71,93 @@ const AdminDashboard = () => {
 
   return (
     <div className="page-container">
-      <div className="animate-slide-up">
+      <div className="animate-slide-up mb-12 text-center sm:text-left">
         <h1 className="page-title">Admin Dashboard</h1>
         <p className="page-subtitle">Manage users, view logs, and monitor system stats</p>
       </div>
 
       {error && (
-        <div className="alert alert-error mb-6 animate-fade-in">
+        <div className="alert alert-error mb-10 animate-fade-in">
           ⚠️ {error}
           <button onClick={() => setError('')} className="ml-auto text-red-300 hover:text-white">✕</button>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl bg-slate-800/50 mb-8 max-w-md">
+      <div className="flex gap-2 p-2 rounded-2xl glass-card mb-12 max-w-fit mx-auto sm:mx-0">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`
-              flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200
+              flex items-center gap-2 py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-300
               ${activeTab === tab.id
-                ? 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30'
+                ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
               }
             `}
           >
-            {tab.label}
+            <span className="text-lg">{tab.icon}</span>
+            <span>{tab.label.split(' ')[1]}</span>
           </button>
         ))}
       </div>
 
       {/* Stats Tab */}
       {activeTab === 'stats' && stats && (
-        <div className="space-y-8 animate-fade-in">
+        <div className="animate-fade-in">
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="glass-card p-6">
-              <p className="text-sm text-slate-400 font-medium">Total Users</p>
-              <p className="text-3xl font-bold text-slate-200 mt-1">{stats.totalUsers}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+            <div className="glass-card p-8 hover:scale-[1.02] transition-transform">
+              <div className="flex justify-between items-start">
+                <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Total Users</p>
+                <span className="text-xl">👥</span>
+              </div>
+              <p className="text-5xl font-bold text-slate-200 mt-6">{stats.totalUsers}</p>
             </div>
-            <div className="glass-card p-6">
-              <p className="text-sm text-slate-400 font-medium">Total Predictions</p>
-              <p className="text-3xl font-bold text-emerald-400 mt-1">{stats.totalPredictions}</p>
+            
+            <div className="glass-card p-8 hover:scale-[1.02] transition-transform">
+              <div className="flex justify-between items-start">
+                <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Predictions</p>
+                <span className="text-xl">🍃</span>
+              </div>
+              <p className="text-5xl font-bold text-emerald-400 mt-6">{stats.totalPredictions}</p>
             </div>
-            <div className="glass-card p-6">
-              <p className="text-sm text-slate-400 font-medium">Species Detected</p>
-              <p className="text-3xl font-bold text-amber-400 mt-1">{stats.speciesBreakdown?.length || 0}</p>
+            
+            <div className="glass-card p-8 hover:scale-[1.02] transition-transform">
+              <div className="flex justify-between items-start">
+                <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Species Detected</p>
+                <span className="text-xl">🔍</span>
+              </div>
+              <p className="text-5xl font-bold text-amber-400 mt-6">{stats.speciesBreakdown?.length || 0}</p>
             </div>
           </div>
 
           {/* Species Breakdown */}
           {stats.speciesBreakdown?.length > 0 && (
-            <div className="glass-card p-6">
-              <h3 className="font-semibold text-slate-200 mb-4">Species Breakdown</h3>
-              <div className="space-y-3">
-                {stats.speciesBreakdown.map((s) => (
-                  <div key={s.species} className="flex items-center gap-4">
-                    <span className="text-sm font-medium text-slate-300 w-28">{s.species}</span>
-                    <div className="flex-1 bg-slate-700/50 rounded-full h-2.5 overflow-hidden">
+            <div className="glass-card p-8">
+              <h3 className="text-xl font-bold text-slate-200 mb-6 flex items-center gap-2">
+                <span>📊</span> Species Breakdown
+              </h3>
+              <div className="space-y-4">
+                {stats.speciesBreakdown.map((s, idx) => (
+                  <div key={s.species} className="flex items-center gap-4 p-4 rounded-xl bg-slate-900/80 border border-slate-700/50 hover:border-emerald-500/50 transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">
+                      #{idx + 1}
+                    </div>
+                    <span className="text-base font-semibold text-slate-200 w-32 truncate">{s.species}</span>
+                    <div className="flex-1 bg-slate-800 rounded-full h-3 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600"
+                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-700"
                         style={{ width: `${(s.count / stats.totalPredictions) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm text-slate-400 w-16 text-right">{s.count}</span>
-                    <span className="text-xs text-slate-500 w-20 text-right">
-                      avg {s.avgConfidence}%
-                    </span>
+                    <div className="flex flex-col items-end w-24">
+                      <span className="text-lg font-bold text-emerald-400">{s.count}</span>
+                      <span className="text-xs text-slate-500">
+                        avg {s.avgConfidence}%
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>

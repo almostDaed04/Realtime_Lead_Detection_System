@@ -157,29 +157,30 @@ catch (error) {
  */
 
 const resendCode = async(req,res,next)=>{
-   try{const {email} = req.body;
+   try {
+     const {email} = req.body;
 
-   const user = await User.findOne(email);
+     const user = await User.findOne({ email }); // Fixed: object parameter
 
-   if(!user){
-      return res.status(404).json({
-        error: 'User not found.',
+     if(!user){
+        return res.status(404).json({
+          error: 'User not found.',
+        });
+     }
+
+     //generate new otp
+     const code = user.setVerificationCode(); // Fixed: generate code
+     await user.save(); // Fixed: save user with new code
+
+     await sendVerificationEmail(
+        user.email,
+        code
+      );
+
+      res.json({
+        message: 'A new verification code has been sent.',
       });
-   }
-
-   //generate new otp
-   await sendVerificationEmail(
-      user.email,
-      code
-    );
-
-
-    res.json({
-
-      message:
-        'A new verification code has been sent.',
-
-    });}
+    }
     catch (error) {
 
     next(error);
