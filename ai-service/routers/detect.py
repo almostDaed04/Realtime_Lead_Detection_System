@@ -19,7 +19,7 @@ class DetectionResponse(BaseModel):
 
 
 @router.post("/detect", response_model=DetectionResponse)
-async def detect_leaves(request: Request, file: UploadFile = File(...)):
+def detect_leaves(request: Request, file: UploadFile = File(...)):
     """
     Detect leaves in an uploaded image.
 
@@ -34,7 +34,7 @@ async def detect_leaves(request: Request, file: UploadFile = File(...)):
         )
 
     try:
-        image_bytes = await file.read()
+        image_bytes = file.file.read()
 
         if len(image_bytes) == 0:
             raise HTTPException(status_code=400, detail="Empty file received.")

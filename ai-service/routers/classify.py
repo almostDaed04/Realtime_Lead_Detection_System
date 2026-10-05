@@ -19,7 +19,7 @@ class ClassificationResponse(BaseModel):
 
 
 @router.post("/classify", response_model=ClassificationResponse)
-async def classify_leaf(request: Request, file: UploadFile = File(...)):
+def classify_leaf(request: Request, file: UploadFile = File(...)):
     """
     Classify a single cropped leaf image.
 
@@ -33,7 +33,7 @@ async def classify_leaf(request: Request, file: UploadFile = File(...)):
         )
 
     try:
-        image_bytes = await file.read()
+        image_bytes = file.file.read()
 
         if len(image_bytes) == 0:
             raise HTTPException(status_code=400, detail="Empty file received.")

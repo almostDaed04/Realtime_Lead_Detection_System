@@ -10,18 +10,41 @@ const getUsers = async (req, res, next) => {
     const { page, limit } = req.query;
     const skip = (page - 1) * limit;
 
-    const [users, total] = await Promise.all([
+    const [users, total, predictionStats] = await Promise.all([
       User.find()
-        .select('-passwordHash')
+        .select('-passwordHash -verificationCode -verificationCodeExpires')
         .sort({ registrationDate: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
       User.countDocuments(),
+      Prediction.aggregate([
+        {
+          $group: {
+            _id: '$userId',
+            predictionCount: { $sum: 1 },
+            avgConfidence: { $avg: '$confidenceScore' },
+          },
+        },
+      ]),
     ]);
 
+    const statsByUserId = new Map(
+      predictionStats.map((stat) => [stat._id.toString(), stat])
+    );
+    const usersWithPredictionStats = users.map((user) => {
+      const predictionStat = statsByUserId.get(user._id.toString());
+      return {
+        ...user,
+        predictionCount: predictionStat?.predictionCount || 0,
+        averageConfidence: predictionStat
+          ? Math.round(predictionStat.avgConfidence * 10) / 10
+          : null,
+      };
+    });
+
     res.json({
-      users,
+      users: usersWithPredictionStats,
       pagination: {
         page,
         limit,
@@ -52,6 +75,10 @@ const deleteUser = async (req, res, next) => {
 
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
+    }
+
+    if (user.role === 'admin') {
+      return res.status(400).json({ error: 'Admin accounts cannot be deleted here.' });
     }
 
     // Remove user's predictions first

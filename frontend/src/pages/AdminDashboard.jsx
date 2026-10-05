@@ -150,6 +150,9 @@ const AdminDashboard = () => {
       {/* Users Tab */}
       {activeTab === 'users' && (
         <div className="animate-fade-in">
+          <p className="text-sm text-slate-400 mb-4">
+            Average confidence summarizes model certainty; it is not measured prediction accuracy because user-verified labels are not stored.
+          </p>
           {loading ? (
             <div className="flex justify-center py-12">
               <div className="spinner spinner-lg"></div>

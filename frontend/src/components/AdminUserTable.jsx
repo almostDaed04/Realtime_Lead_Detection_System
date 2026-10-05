@@ -50,6 +50,9 @@ const AdminUserTable = ({ users, onUserDeleted }) => {
               <th className="text-left px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Email</th>
               <th className="text-left px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Role</th>
               <th className="text-left px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Status</th>
+              <th className="text-left px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Email verified</th>
+              <th className="text-right px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Predictions</th>
+              <th className="text-right px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Avg. confidence</th>
               <th className="text-left px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Registered</th>
               <th className="text-right px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Actions</th>
             </tr>
@@ -82,6 +85,11 @@ const AdminUserTable = ({ users, onUserDeleted }) => {
                   `}>
                     {user.accountStatus}
                   </span>
+                </td>
+                <td className="px-6 py-4 text-sm text-slate-400">{user.isVerified ? 'Yes' : 'No'}</td>
+                <td className="px-6 py-4 text-sm text-slate-300 text-right">{user.predictionCount}</td>
+                <td className="px-6 py-4 text-sm text-slate-300 text-right">
+                  {user.averageConfidence == null ? '—' : `${user.averageConfidence}%`}
                 </td>
                 <td className="px-6 py-4 text-sm text-slate-400">
                   {formatDate(user.registrationDate)}

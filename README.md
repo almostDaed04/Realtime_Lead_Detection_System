@@ -40,6 +40,13 @@ cp .env.example .env  # Edit with your config
 npm run dev
 ```
 
+#### Admin access
+Register and verify an account first. From the `backend` directory, promote that account using its email:
+```bash
+npm run make-admin -- admin@example.com
+```
+Then sign out and sign back in. The dashboard is available at `/admin` on the frontend (development: `http://localhost:5173/admin`). The command uses the configured `MONGODB_URI` and does not change the account password.
+
 #### Frontend
 ```bash
 cd frontend
