@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import AdminUserTable from '../components/AdminUserTable';
 import PaginationControl from '../components/PaginationControl';
@@ -64,40 +64,40 @@ const AdminDashboard = () => {
   };
 
   const tabs = [
-    { id: 'stats', label: '📊 Overview', icon: '📊' },
-    { id: 'users', label: '👥 Users', icon: '👥' },
-    { id: 'logs', label: '📋 Logs', icon: '📋' },
+    { id: 'stats', label: 'Overview', icon: '◫' },
+    { id: 'users', label: 'Users', icon: '♙' },
+    { id: 'logs', label: 'Activity logs', icon: '≡' },
   ];
 
   return (
-    <div className="page-container">
-      <div className="animate-slide-up">
-        <h1 className="page-title">Admin Dashboard</h1>
-        <p className="page-subtitle">Manage users, view logs, and monitor system stats</p>
+    <div className="page-container admin-dashboard">
+      <div className="admin-heading animate-slide-up">
+        <div>
+          <span className="admin-eyebrow"><span className="admin-live-dot" /> CONTROL CENTER</span>
+          <h1 className="page-title">Admin dashboard</h1>
+          <p className="page-subtitle">A clear view of your users, detections, and system activity.</p>
+        </div>
+        <div className="admin-heading-mark" aria-hidden="true">LS <span>/</span> ADMIN</div>
       </div>
 
       {error && (
         <div className="alert alert-error mb-6 animate-fade-in">
-          ⚠️ {error}
-          <button onClick={() => setError('')} className="ml-auto text-red-300 hover:text-white">✕</button>
+          âš ï¸ {error}
+          <button onClick={() => setError('')} className="ml-auto text-red-300 hover:text-white">âœ•</button>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl bg-slate-800/50 mb-8 max-w-md">
+      <div className="admin-tabs" role="tablist" aria-label="Dashboard sections">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`
-              flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200
-              ${activeTab === tab.id
-                ? 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
-              }
-            `}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            className={`admin-tab ${activeTab === tab.id ? 'is-active' : ''}`}
           >
-            {tab.label}
+            <span className="admin-tab-icon" aria-hidden="true">{tab.icon}</span>{tab.label}
           </button>
         ))}
       </div>
@@ -106,33 +106,33 @@ const AdminDashboard = () => {
       {activeTab === 'stats' && stats && (
         <div className="space-y-8 animate-fade-in">
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="glass-card p-6">
-              <p className="text-sm text-slate-400 font-medium">Total Users</p>
-              <p className="text-3xl font-bold text-slate-200 mt-1">{stats.totalUsers}</p>
+          <div className="admin-stat-grid">
+            <div className="glass-card admin-stat-card stat-users">
+             <p className="admin-stat-label">Total users</p>
+              <p className="admin-stat-value">{stats.totalUsers}</p><span className="admin-stat-note">Registered accounts</span>
             </div>
-            <div className="glass-card p-6">
-              <p className="text-sm text-slate-400 font-medium">Total Predictions</p>
-              <p className="text-3xl font-bold text-emerald-400 mt-1">{stats.totalPredictions}</p>
+            <div className="glass-card admin-stat-card stat-predictions">
+              <p className="admin-stat-label">Total predictions</p>
+              <p className="admin-stat-value">{stats.totalPredictions}</p><span className="admin-stat-note">Leaf scans processed</span>
             </div>
-            <div className="glass-card p-6">
-              <p className="text-sm text-slate-400 font-medium">Species Detected</p>
-              <p className="text-3xl font-bold text-amber-400 mt-1">{stats.speciesBreakdown?.length || 0}</p>
+            <div className="glass-card admin-stat-card stat-species">
+              <p className="admin-stat-label">Species detected</p>
+              <p className="admin-stat-value">{stats.speciesBreakdown?.length || 0}</p><span className="admin-stat-note">Unique species identified</span>
             </div>
           </div>
 
           {/* Species Breakdown */}
           {stats.speciesBreakdown?.length > 0 && (
-            <div className="glass-card p-6">
-              <h3 className="font-semibold text-slate-200 mb-4">Species Breakdown</h3>
-              <div className="space-y-3">
+            <div className="glass-card admin-breakdown">
+              <div className="admin-section-heading"><div><span className="admin-eyebrow">MODEL INSIGHTS</span><h3>Species breakdown</h3></div><span className="admin-section-count">{stats.speciesBreakdown.length} species</span></div>
+              <div className="admin-species-list">
                 {stats.speciesBreakdown.map((s) => (
-                  <div key={s.species} className="flex items-center gap-4">
+                  <div key={s.species} className="admin-species-row">
                     <span className="text-sm font-medium text-slate-300 w-28">{s.species}</span>
-                    <div className="flex-1 bg-slate-700/50 rounded-full h-2.5 overflow-hidden">
+                    <div className="admin-species-track">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600"
-                        style={{ width: `${(s.count / stats.totalPredictions) * 100}%` }}
+                        className="admin-species-fill"
+                        style={{ width: `${stats.totalPredictions ? (s.count / stats.totalPredictions) * 100 : 0}%` }}
                       ></div>
                     </div>
                     <span className="text-sm text-slate-400 w-16 text-right">{s.count}</span>
@@ -179,12 +179,12 @@ const AdminDashboard = () => {
             </div>
           ) : logs.length === 0 ? (
             <div className="glass-card p-12 text-center">
-              <span className="text-4xl">📋</span>
+              <span className="text-4xl">ðŸ“‹</span>
               <p className="text-slate-400 mt-4">No prediction logs found.</p>
             </div>
           ) : (
             <>
-              <div className="glass-card overflow-hidden">
+              <div className="glass-card admin-table-card overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>

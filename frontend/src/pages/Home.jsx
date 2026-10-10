@@ -36,18 +36,18 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative home-page">
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden home-hero">
         {/* Background gradient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24 text-center">
-          <div className="animate-slide-up">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24 home-hero-inner">
+          <div className="animate-slide-up home-hero-copy">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 ring-1 ring-emerald-500/20 text-emerald-400 text-sm font-medium mb-6">
               🍃 AI-Powered Plant Identification
             </span>
@@ -80,11 +80,21 @@ const Home = () => {
               )}
             </div>
           </div>
+          <div className="home-hero-visual" aria-hidden="true">
+            <div className="home-visual-glow" />
+            <div className="home-orbit home-orbit-one" />
+            <div className="home-orbit home-orbit-two" />
+            <div className="home-leaf" />
+            <div className="home-scan-line" />
+            <div className="home-detection-tag"><span /> MODEL PREVIEW <b>5 SPECIES</b></div>
+            <div className="home-visual-caption"><span>LEAFSCAN / AI</span><strong>Species recognition</strong><small>YOLOv8 detection + CNN classification</small></div>
+            <div className="home-coordinate">UPLOAD / DETECT / IDENTIFY</div>
+          </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 home-steps">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-slate-200">How It Works</h2>
           <p className="text-center text-slate-400 mb-12 max-w-xl mx-auto">
@@ -95,7 +105,7 @@ const Home = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="glass-card p-6 text-center hover:scale-105 transition-transform duration-300"
+                className="glass-card p-6 text-center home-step-card"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
@@ -111,7 +121,7 @@ const Home = () => {
       </section>
 
       {/* Supported Species */}
-      <section className="py-20 px-4 border-t border-slate-800">
+      <section className="py-20 px-4 border-t border-slate-800 home-species">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-slate-200">Supported Species</h2>
           <p className="text-center text-slate-400 mb-12">
@@ -123,7 +133,7 @@ const Home = () => {
               <div
                 key={s.name}
                 className={`
-                  glass-card p-5 text-center hover:scale-105 transition-all duration-300
+                  glass-card p-5 text-center home-species-card
                   bg-gradient-to-br ${s.color}
                 `}
               >
@@ -138,7 +148,7 @@ const Home = () => {
       {/* CTA */}
       {!isAuthenticated && (
         <section className="py-20 px-4">
-          <div className="max-w-3xl mx-auto glass-card p-12 text-center">
+          <div className="max-w-3xl mx-auto glass-card p-12 text-center home-cta">
             <h2 className="text-3xl font-bold text-slate-200 mb-4">Ready to Identify Leaves?</h2>
             <p className="text-slate-400 mb-8">
               Create a free account and start classifying plant species in seconds.

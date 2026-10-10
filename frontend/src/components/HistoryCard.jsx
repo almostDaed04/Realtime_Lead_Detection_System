@@ -57,9 +57,9 @@ const HistoryCard = ({ prediction }) => {
   };
 
   return (
-    <div className="glass-card overflow-hidden hover:scale-[1.02] transition-transform duration-300 animate-fade-in">
+    <div className="glass-card history-card animate-fade-in">
       {/* Thumbnail */}
-      <div className="aspect-square bg-slate-800 flex items-center justify-center">
+      <div className="aspect-square bg-slate-800 flex items-center justify-center history-thumb">
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
@@ -74,7 +74,7 @@ const HistoryCard = ({ prediction }) => {
       </div>
 
       {/* Info */}
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-2 history-card-info">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-emerald-400 flex items-center gap-1.5">
             <span>{speciesEmoji[prediction.species] || '🌿'}</span>

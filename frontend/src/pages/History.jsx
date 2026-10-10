@@ -35,14 +35,18 @@ const History = () => {
   };
 
   return (
-    <div className="page-container">
-      <div className="animate-slide-up">
-        <h1 className="page-title">Prediction History</h1>
+    <div className="page-container history-page">
+      <div className="history-heading animate-slide-up">
+        <div>
+          <span className="history-eyebrow"><span /> YOUR ACTIVITY</span>
+          <h1 className="page-title">Prediction history</h1>
         <p className="page-subtitle">
           {pagination.total > 0
             ? `${pagination.total} prediction${pagination.total === 1 ? '' : 's'} found`
             : 'Your past predictions will appear here'}
-        </p>
+          </p>
+        </div>
+        {!loading && predictions.length > 0 && <div className="history-count"><strong>{pagination.total}</strong><span>total scans</span></div>}
       </div>
 
       {error && (
@@ -56,15 +60,15 @@ const History = () => {
           <div className="spinner spinner-lg"></div>
         </div>
       ) : predictions.length === 0 ? (
-        <div className="glass-card p-16 text-center animate-fade-in">
+        <div className="glass-card history-empty animate-fade-in">
           <span className="text-5xl">🍂</span>
-          <h2 className="text-xl font-bold text-slate-200 mt-4">No Predictions Yet</h2>
+          <h2>No predictions yet</h2>
           <p className="text-slate-400 mt-2 mb-6">Upload your first leaf image to get started.</p>
           <Link to="/upload" className="btn btn-primary">📸 Upload Image</Link>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="history-grid">
             {predictions.map((prediction) => (
               <HistoryCard key={prediction._id} prediction={prediction} />
             ))}
