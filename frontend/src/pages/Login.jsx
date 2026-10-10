@@ -173,6 +173,10 @@ return (
 
         </div>
 
+        <div className="-mt-2 text-right">
+          <Link to="/forgot-password" className="text-sm text-emerald-400 hover:text-emerald-300 font-medium">Forgot password?</Link>
+        </div>
+
 
         {/* Submit Button */}
         <button

@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      // Mongoose 8 uses the new URL parser and unified topology by default
-    });
-    console.log(`MongoDB connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`MongoDB connection error: ${error.message}`);
-    process.exit(1);
+  if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI is not configured. Add it to backend/.env.');
   }
+
+  const conn = await mongoose.connect(process.env.MONGODB_URI, {
+    serverSelectionTimeoutMS: 10000,
+  });
+  console.log(`MongoDB connected: ${conn.connection.host}`);
+  return conn;
 };
 
 module.exports = connectDB;

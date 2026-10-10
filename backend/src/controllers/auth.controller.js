@@ -1,8 +1,45 @@
 const User = require('../models/User');
+const crypto = require('crypto');
 const { generateToken } = require('../middleware/auth');
 const {
   sendVerificationEmail,
+  sendPasswordResetEmail,
+  sendSignInNotification,
 } = require('../utils/mailer');
+
+const requestPasswordReset = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      const token = crypto.randomBytes(32).toString('hex');
+      user.resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
+      user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000);
+      await user.save();
+      const appUrl = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+      await sendPasswordResetEmail(user.email, `${appUrl}/reset-password?token=${token}`);
+    }
+    res.json({ message: 'If an account exists for that email, a password reset link has been sent.' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const tokenHash = crypto.createHash('sha256').update(req.body.token).digest('hex');
+    const user = await User.findOne({ resetPasswordToken: tokenHash, resetPasswordExpires: { $gt: new Date() } })
+      .select('+resetPasswordToken +resetPasswordExpires');
+    if (!user) return res.status(400).json({ error: 'This reset link is invalid or has expired. Request a new one.' });
+
+    user.passwordHash = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+    res.json({ message: 'Password reset successfully. You can now sign in.' });
+  } catch (error) {
+    next(error);
+  }
+};
 
 /**
  * POST /api/auth/register
@@ -31,6 +68,7 @@ const register = async (req, res, next) => {
       passwordHash: password,
       isVarified:false
     });
+    user.verificationPurpose = 'signup';
 
      const code = user.setVerificationCode();
     await user.save();
@@ -81,6 +119,7 @@ const login = async (req, res, next) => {
 
    //generate a new otp for login
    const code = user.setVerificationCode();
+   user.verificationPurpose = 'login';
 
    await user.save();
 
@@ -108,7 +147,7 @@ const login = async (req, res, next) => {
 const verifyCode = async(req,res,next) =>{
   try{
     const {email,code} = req.body;
-    const user = await User.findOne({email}).select('+verificationCode +verificationCodeExpires');
+    const user = await User.findOne({email}).select('+verificationCode +verificationCodeExpires +verificationPurpose');
     
     if(!user){
       return res.status(404).json({
@@ -124,6 +163,8 @@ const verifyCode = async(req,res,next) =>{
       });
     }
 
+    const isSignIn = user.verificationPurpose === 'login';
+
     //mark email as verified
     user.isVarified = true;
 
@@ -131,8 +172,15 @@ const verifyCode = async(req,res,next) =>{
     user.verificationCode = undefined;
 
     user.verificationCodeExpires = undefined;
+    user.verificationPurpose = undefined;
 
     await user.save();
+
+    if (isSignIn) {
+      sendSignInNotification(user.email).catch((error) => {
+        console.error(`Could not send sign-in notification: ${error.message}`);
+      });
+    }
 
     const token = generateToken(user);
 
@@ -210,6 +258,8 @@ module.exports = {
   verifyCode,
 
   resendCode,
+  requestPasswordReset,
+  resetPassword,
 
   getMe,
 

@@ -7,6 +7,8 @@ const {
   verifyCode,
   resendCode,
   getMe,
+  requestPasswordReset,
+  resetPassword,
 } = require('../controllers/auth.controller');
 
 const { requireAuth } = require('../middleware/auth');
@@ -15,6 +17,8 @@ const {
   validate,
   registerSchema,
   loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
 } = require('../middleware/validate');
 
 const router = express.Router();
@@ -57,6 +61,9 @@ router.post(
   validate(loginSchema),
   login
 );
+
+router.post('/forgot-password', validate(forgotPasswordSchema), requestPasswordReset);
+router.post('/reset-password', validate(resetPasswordSchema), resetPassword);
 
 
 // Verify OTP

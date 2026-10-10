@@ -66,7 +66,30 @@ const sendVerificationEmail = async (
 
 };
 
+const sendPasswordResetEmail = async (toEmail, resetUrl) => {
+  await transporter.sendMail({
+    from: `"LeafScan" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    to: toEmail,
+    subject: 'Reset your LeafScan password',
+    text: `Use this link to reset your password: ${resetUrl}\nThis link expires in 1 hour. If you did not request this, ignore this email.`,
+    html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:32px;background:#f4fdf8;border-radius:12px"><h2 style="color:#059669">LeafScan password reset</h2><p>We received a request to reset your password.</p><p><a href="${resetUrl}" style="display:inline-block;padding:12px 20px;background:#059669;color:white;text-decoration:none;border-radius:8px">Reset password</a></p><p>This link expires in 1 hour. If you did not request this, you can ignore this email.</p></div>`,
+  });
+};
+
+const sendSignInNotification = async (toEmail) => {
+  const signInTime = new Date().toLocaleString('en-US', { timeZone: 'UTC', timeZoneName: 'short' });
+  await transporter.sendMail({
+    from: `"LeafScan" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    to: toEmail,
+    subject: 'New sign in to your LeafScan account',
+    text: `Your LeafScan account was signed in to at ${signInTime}. If this was not you, reset your password immediately.`,
+    html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:32px;background:#f4fdf8;border-radius:12px"><h2 style="color:#059669">New sign in to LeafScan</h2><p>Your account was signed in to at <strong>${signInTime}</strong>.</p><p>If this was not you, reset your password immediately and contact your administrator if you need help.</p></div>`,
+  });
+};
+
 
 module.exports = {
   sendVerificationEmail,
+  sendPasswordResetEmail,
+  sendSignInNotification,
 };

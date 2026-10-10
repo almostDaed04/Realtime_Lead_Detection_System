@@ -29,6 +29,15 @@ const loginSchema = z.object({
     .min(1, 'Password is required'),
 });
 
+const forgotPasswordSchema = z.object({
+  email: z.string().email('Please provide a valid email').trim().toLowerCase(),
+});
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Reset token is required'),
+  password: registerSchema.shape.password,
+});
+
 // --- Query Schemas ---
 
 const paginationSchema = z.object({
@@ -67,6 +76,8 @@ const validate = (schema, source = 'body') => {
 module.exports = {
   registerSchema,
   loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
   paginationSchema,
   validate,
 };

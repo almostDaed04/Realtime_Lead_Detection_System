@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -11,6 +12,7 @@ const userSchema = new mongoose.Schema({
     minlength: [3, 'Username must be at least 3 characters'],
     maxlength: [30, 'Username cannot exceed 30 characters'],
   },
+
   email: {
     type: String,
     required: [true, 'Email is required'],
@@ -19,32 +21,62 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'],
   },
+
   passwordHash: {
     type: String,
     required: [true, 'Password is required'],
   },
+
   role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
   },
+
   accountStatus: {
     type: String,
     enum: ['active', 'disabled'],
     default: 'active',
   },
+
+  // Email verification OTP
   verificationCode: {
-  type: String,
-  select: false, 
-},
-verificationCodeExpires: {
-  type: Date,
-  select: false,
-},
-isVerified: {
-  type: Boolean,
-  default: false,
-},
+    type: String,
+    select: false,
+    default: undefined,
+  },
+
+  verificationCodeExpires: {
+    type: Date,
+    select: false,
+    default: undefined,
+  },
+
+  verificationPurpose: {
+    type: String,
+    enum: ['signup', 'login'],
+    select: false,
+    default: undefined,
+  },
+
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+
+  // Forgot-password reset token
+  resetPasswordToken: {
+    type: String,
+    select: false,
+    default: undefined,
+  },
+
+  resetPasswordExpires: {
+    type: Date,
+    select: false,
+    default: undefined,
+  },
+
   registrationDate: {
     type: Date,
     default: Date.now,
@@ -52,31 +84,34 @@ isVerified: {
 });
 
 // Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('passwordHash')) return next();
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
-    next();
-  } catch (error) {
-    next(error);
+userSchema.pre('save', async function () {
+  if (!this.isModified('passwordHash')) {
+    return;
   }
+
+  const salt = await bcrypt.genSalt(12);
+
+  this.passwordHash = await bcrypt.hash(
+    this.passwordHash,
+    salt
+  );
 });
 
-// Compare password method
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.passwordHash);
+// Compare entered password with stored hash
+userSchema.methods.comparePassword = async function (
+  candidatePassword
+) {
+  return bcrypt.compare(
+    candidatePassword,
+    this.passwordHash
+  );
 };
 
-
-// Generate verification code
+// Generate a 6-digit email verification code
 userSchema.methods.setVerificationCode = function () {
-
-  // Generate a 6-digit OTP
   const code = crypto
     .randomInt(100000, 1000000)
     .toString();
-
 
   // Store only the hashed OTP
   this.verificationCode = crypto
@@ -84,58 +119,56 @@ userSchema.methods.setVerificationCode = function () {
     .update(code)
     .digest('hex');
 
-
   // OTP expires after 10 minutes
-  this.verificationCodeExpires =
-    new Date(
-      Date.now() + 10 * 60 * 1000
-    );
+  this.verificationCodeExpires = new Date(
+    Date.now() + 10 * 60 * 1000
+  );
 
-
-  // Return plain OTP so it can be sent by email
+  // Return plain OTP for email delivery
   return code;
-
 };
 
-// Verify the OTP entered by the user
-userSchema.methods.verifyCode = function (
-  candidateCode
-) {
-
+// Verify the entered OTP
+userSchema.methods.verifyCode = function (candidateCode) {
   if (
+    typeof candidateCode !== 'string' ||
     !this.verificationCode ||
     !this.verificationCodeExpires
   ) {
     return false;
   }
 
-
-  // Check whether OTP has expired
-  if (
-    this.verificationCodeExpires < Date.now()
-  ) {
+  // Reject expired codes
+  if (this.verificationCodeExpires.getTime() <= Date.now()) {
     return false;
   }
 
-
-  // Hash the code entered by the user
   const hashedCode = crypto
     .createHash('sha256')
     .update(candidateCode)
     .digest('hex');
 
+  // Compare hashes without an early-exit string comparison
+  const expected = Buffer.from(this.verificationCode, 'hex');
+  const actual = Buffer.from(hashedCode, 'hex');
 
-  // Compare hashed values
   return (
-    hashedCode === this.verificationCode
+    expected.length === actual.length &&
+    crypto.timingSafeEqual(expected, actual)
   );
-
 };
+
 // Remove sensitive fields from JSON output
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
+
   delete obj.passwordHash;
+  delete obj.verificationCode;
+  delete obj.verificationCodeExpires;
+  delete obj.resetPasswordToken;
+  delete obj.resetPasswordExpires;
   delete obj.__v;
+
   return obj;
 };
 

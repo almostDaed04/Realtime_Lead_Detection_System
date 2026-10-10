@@ -10,6 +10,7 @@ import Result from './pages/Result';
 import History from './pages/History';
 import AdminDashboard from './pages/AdminDashboard';
 import VerifyCode from './pages/VerifyCode';
+import PasswordRecovery from './pages/PasswordRecovery';
 import './index.css';
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<PasswordRecovery />} />
+            <Route path="/reset-password" element={<PasswordRecovery />} />
 
             {/* Protected Routes (User) */}
             <Route
