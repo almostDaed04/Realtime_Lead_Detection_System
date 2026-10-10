@@ -70,75 +70,77 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="page-container admin-dashboard">
-      <div className="admin-heading animate-slide-up">
-        <div>
-          <span className="admin-eyebrow"><span className="admin-live-dot" /> CONTROL CENTER</span>
-          <h1 className="page-title">Admin dashboard</h1>
-          <p className="page-subtitle">A clear view of your users, detections, and system activity.</p>
-        </div>
-        <div className="admin-heading-mark" aria-hidden="true">LS <span>/</span> ADMIN</div>
+    <div className="page-container">
+      <div className="animate-slide-up">
+        <h1 className="page-title">Admin Dashboard</h1>
+        <p className="page-subtitle">Manage users, view logs, and monitor system stats</p>
       </div>
 
       {error && (
         <div className="alert alert-error mb-6 animate-fade-in">
-          âš ï¸ {error}
-          <button onClick={() => setError('')} className="ml-auto text-red-300 hover:text-white">âœ•</button>
+          ⚠️ {error}
+          <button onClick={() => setError('')} className="ml-auto text-red-300 hover:text-white">✕</button>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="admin-tabs" role="tablist" aria-label="Dashboard sections">
+      <div className="flex gap-1 p-1 rounded-xl bg-slate-800/50 mb-8 max-w-md">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            className={`admin-tab ${activeTab === tab.id ? 'is-active' : ''}`}
+            className={`
+              flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200
+              ${activeTab === tab.id
+                ? 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+              }
+            `}
           >
-            <span className="admin-tab-icon" aria-hidden="true">{tab.icon}</span>{tab.label}
+            {tab.label}
           </button>
         ))}
       </div>
 
       {/* Stats Tab */}
       {activeTab === 'stats' && stats && (
-        <div className="space-y-8 animate-fade-in">
+        <div className="animate-fade-in">
           {/* Summary Cards */}
-          <div className="admin-stat-grid">
-            <div className="glass-card admin-stat-card stat-users">
-             <p className="admin-stat-label">Total users</p>
-              <p className="admin-stat-value">{stats.totalUsers}</p><span className="admin-stat-note">Registered accounts</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="glass-card p-6">
+              <p className="text-sm text-slate-400 font-medium">Total Users</p>
+              <p className="text-3xl font-bold text-slate-200 mt-1">{stats.totalUsers}</p>
             </div>
-            <div className="glass-card admin-stat-card stat-predictions">
-              <p className="admin-stat-label">Total predictions</p>
-              <p className="admin-stat-value">{stats.totalPredictions}</p><span className="admin-stat-note">Leaf scans processed</span>
+            <div className="glass-card p-6">
+              <p className="text-sm text-slate-400 font-medium">Total Predictions</p>
+              <p className="text-3xl font-bold text-emerald-400 mt-1">{stats.totalPredictions}</p>
             </div>
-            <div className="glass-card admin-stat-card stat-species">
-              <p className="admin-stat-label">Species detected</p>
-              <p className="admin-stat-value">{stats.speciesBreakdown?.length || 0}</p><span className="admin-stat-note">Unique species identified</span>
+            <div className="glass-card p-6">
+              <p className="text-sm text-slate-400 font-medium">Species Detected</p>
+              <p className="text-3xl font-bold text-amber-400 mt-1">{stats.speciesBreakdown?.length || 0}</p>
             </div>
           </div>
 
           {/* Species Breakdown */}
           {stats.speciesBreakdown?.length > 0 && (
-            <div className="glass-card admin-breakdown">
-              <div className="admin-section-heading"><div><span className="admin-eyebrow">MODEL INSIGHTS</span><h3>Species breakdown</h3></div><span className="admin-section-count">{stats.speciesBreakdown.length} species</span></div>
-              <div className="admin-species-list">
+            <div className="glass-card p-6">
+              <h3 className="font-semibold text-slate-200 mb-4">Species Breakdown</h3>
+              <div className="space-y-3">
                 {stats.speciesBreakdown.map((s) => (
-                  <div key={s.species} className="admin-species-row">
+                  <div key={s.species} className="flex items-center gap-4">
                     <span className="text-sm font-medium text-slate-300 w-28">{s.species}</span>
-                    <div className="admin-species-track">
+                    <div className="flex-1 bg-slate-700/50 rounded-full h-2.5 overflow-hidden">
                       <div
-                        className="admin-species-fill"
-                        style={{ width: `${stats.totalPredictions ? (s.count / stats.totalPredictions) * 100 : 0}%` }}
+                        className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600"
+                        style={{ width: `${(s.count / stats.totalPredictions) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm text-slate-400 w-16 text-right">{s.count}</span>
-                    <span className="text-xs text-slate-500 w-20 text-right">
-                      avg {s.avgConfidence}%
-                    </span>
+                    <div className="flex flex-col items-end w-24">
+                      <span className="text-lg font-bold text-emerald-400">{s.count}</span>
+                      <span className="text-xs text-slate-500">
+                        avg {s.avgConfidence}%
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>

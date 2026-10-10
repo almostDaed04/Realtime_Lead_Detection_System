@@ -14,7 +14,7 @@ Four independent services:
 - Mango
 - Guava
 - Jamun (Java Plum)
-- Ashoka
+- Peepal
 - Pomegranate
 
 ## Getting Started

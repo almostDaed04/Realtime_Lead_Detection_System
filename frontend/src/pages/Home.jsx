@@ -30,8 +30,8 @@ const Home = () => {
   const species = [
     { name: 'Mango', emoji: '🥭', color: 'from-amber-500/20 to-amber-600/10' },
     { name: 'Guava', emoji: '🍈', color: 'from-emerald-500/20 to-emerald-600/10' },
-    { name: 'Jamun', emoji: '🫐', color: 'from-purple-500/20 to-purple-600/10' },
-    { name: 'Ashoka', emoji: '🌳', color: 'from-green-500/20 to-green-600/10' },
+    { name: 'Jamun (Java Plum)', emoji: '🫐', color: 'from-purple-500/20 to-purple-600/10' },
+    { name: 'Peepal', emoji: '🌿', color: 'from-green-500/20 to-green-600/10' },
     { name: 'Pomegranate', emoji: '🍎', color: 'from-rose-500/20 to-rose-600/10' },
   ];
 
@@ -165,6 +165,7 @@ const Home = () => {
         <div className="max-w-6xl mx-auto text-center text-sm text-slate-500">
           <p>🍃 LeafScan — Real-Time Leaf Detection System</p>
           <p className="mt-1">Built with React, Express, FastAPI, YOLOv8 & PyTorch</p>
+          <p className="mt-4">Copyright &copy; {new Date().getFullYear()} LeafScan. All rights reserved.</p>
         </div>
       </footer>
     </div>
