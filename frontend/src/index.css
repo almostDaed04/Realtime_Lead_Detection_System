@@ -649,3 +649,43 @@ a:hover {
   .lg\:px-8 { padding-left: 2rem !important; padding-right: 2rem !important; }
   .lg\:text-7xl { font-size: 4.5rem !important; line-height: 1 !important; }
 }
+
+/* ── Light Theme Overrides ───────────────────────────────── */
+[data-theme="light"] {
+  --color-bg: #f8fafc;
+  --color-bg-card: #ffffff;
+  --color-bg-elevated: #f1f5f9;
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-border: #cbd5e1;
+}
+
+[data-theme="light"] .text-slate-200 { color: #1e293b !important; } 
+[data-theme="light"] .text-slate-300 { color: #334155 !important; } 
+[data-theme="light"] .text-slate-400 { color: #475569 !important; } 
+[data-theme="light"] .text-slate-500 { color: #64748b !important; } 
+[data-theme="light"] .bg-slate-700\/50 { background-color: rgba(226, 232, 240, 0.7) !important; } 
+[data-theme="light"] .bg-slate-800 { background-color: #f1f5f9 !important; } 
+[data-theme="light"] .bg-slate-800\/30 { background-color: rgba(241, 245, 249, 0.7) !important; } 
+[data-theme="light"] .bg-slate-900 { background-color: #ffffff !important; } 
+[data-theme="light"] .bg-slate-900\/80 { background-color: rgba(255, 255, 255, 0.8) !important; }
+[data-theme="light"] .bg-slate-900\/95 { background-color: rgba(255, 255, 255, 0.95) !important; }
+[data-theme="light"] .border-slate-700\/50 { border-color: rgba(203, 213, 225, 0.5) !important; }
+[data-theme="light"] .border-slate-800 { border-color: #cbd5e1 !important; } 
+[data-theme="light"] .hover\:bg-slate-700\/50:hover { background-color: rgba(226, 232, 240, 0.7) !important; }
+[data-theme="light"] .border-slate-600 { border-color: #94a3b8 !important; } 
+
+/* Fix specific glass card for light mode */
+[data-theme="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(148, 163, 184, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .input {
+  background: rgba(248, 250, 252, 0.9);
+}
+
+[data-theme="light"] .input:focus {
+  background: #ffffff;
+}
